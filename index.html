@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday, Outlaw!</title>
+    <link href="https://fonts.googleapis.com/css2?family=Special+Elite&display=swap" rel="stylesheet"> <!-- Western font -->
+    <style>
+        body {
+            font-family: 'Special Elite', cursive; /* Authentic western typewriter */
+            background: linear-gradient(to bottom, #8B4513, #654321), url('https://via.placeholder.com/1920x1080/8B4513/000000?text=Dusty+Plains'); /* RDR2 plains overlay */
+            background-size: cover;
+            background-attachment: fixed;
+            color: #F5DEB3; /* Beige text */
+            margin: 0;
+            padding: 0;
+            text-align: center;
+            overflow-x: hidden;
+        }
+        header {
+            background: rgba(47, 27, 20, 0.9); /* Dark wood saloon */
+            padding: 20px;
+            border-bottom: 5px solid #DAA520; /* Gold sheriff badge */
+            box-shadow: 0 0 20px rgba(218, 165, 32, 0.5);
+        }
+        h1 {
+            font-size: 3em;
+            text-shadow: 3px 3px 6px #000, 0 0 10px #FFD700; /* Glowing outlaw sign */
+            animation: flicker 2s infinite alternate;
+        }
+        @keyframes flicker {
+            0% { opacity: 1; }
+            100% { opacity: 0.8; }
+        }
+        .container {
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+        .section {
+            margin: 40px 0;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.7); /* Saloon interior */
+            border: 5px solid #8B0000; /* Blood-red border like a wanted poster */
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(139, 0, 0, 0.5);
+        }
+        #countdown {
+            font-size: 2em;
+            color: #FFD700; /* Gold coins */
+            text-shadow: 2px 2px 4px #000;
+        }
+        .gallery img {
+            width: 200px;
+            height: 200px;
+            margin: 10px;
+            border: 3px solid #DAA520;
+            border-radius: 5px;
+            transition: transform 0.3s;
+        }
+        .gallery img:hover {
+            transform: scale(1.1); /* Zoom like inspecting loot */
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        input, textarea, button {
+            margin: 10px;
+            padding: 10px;
+            width: 80%;
+            max-width: 400px;
+            border: 2px solid #8B4513;
+            background: #F5DEB3;
+            color: #000;
+            font-family: inherit;
+        }
+        button {
+            background: #DAA520;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background: #FFD700;
+        }
+        #wishes {
+            list-style: none;
+            padding: 0;
+        }
+        #wishes li {
+            background: rgba(255, 255, 255, 0.1);
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 5px;
+            border-left: 5px solid #8B0000;
+        }
+        #horseRide {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background: #654321;
+            color: #F5DEB3;
+            border: none;
+            cursor: pointer;
+        }
+        footer {
+            background: rgba(47, 27, 20, 0.9);
+            padding: 10px;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            text-shadow: 1px 1px 2px #000;
+        }
+        audio {
+            display: none; /* Hidden ambient music */
+        }
+    </style>
+</head>
+<body>
+    <audio id="ambientMusic" loop>
+        <source src="audio/rdr2_house_montage.mp3" type="audio/mp3"> 
+    </audio>
+    
+    <header>
+        <h1>Happy Birthday, Paarwin!</h1>
+        <p>"I ain't much for this world, but you're the best partner I ever had." - Arthur Morgan</p>
+        <button id="horseRide">Take a Horse Ride (Play Sound)</button>
+    </header>
+    
+    <div class="container">
+        <div class="section">
+            <h2>Your Wanted Poster</h2>
+            <p>Dear Paarwin, like Dutch leading the gang, you've led me through the best adventures. From campfires to shootouts, you're my ride-or-die outlaw. Happy Birthday—may your honor stay high and your bounties low!</p>
+            <p><em>"When you ain't got nothin', you got nothin' to lose." - John Marston</em></p>
+        </div>
+        
+        <div class="section">
+            <h2>Countdown to the Big Heist</h2>
+            <div id="countdown">Loading...</div>
+        </div>
+        
+        <div class="section">
+            <h2>Gallery of Outlaw Adventures</h2>
+            <div class="gallery" id="gallery">
+                <!-- Images added via JS -->
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>Campfire Stories (Leave a Bounty)</h2>
+            <form id="wishForm">
+                <input type="text" id="name" placeholder="Your Alias" required>
+                <textarea id="message" placeholder="Share a tale or wish..." required></textarea>
+                <button type="submit">Post the Bounty!</button>
+            </form>
+            <ul id="wishes"></ul>
+        </div>
+    </div>
+    
+    <footer>
+        <p>Forged in the heart of the Wild West. © 2025 | Inspired by Red Dead Redemption 2 | Made for Mr. Paarwin Raj</p>
+    </footer>
+    
+    <script>
+        // Ambient music toggle
+        document.getElementById('horseRide').addEventListener('click', () => {
+            const audio = document.getElementById('ambientMusic');
+            if (audio.paused) {
+                audio.play();
+                document.getElementById('horseRide').innerText = 'Dismount (Pause Sound)';
+            } else {
+                audio.pause();
+                document.getElementById('horseRide').innerText = 'Take a Horse Ride (Play Sound)';
+            }
+        });
+        
+        // Countdown Timer
+        function updateCountdown() {
+            const birthday = new Date('2024-12-25'); // Edit this date
+            const now = new Date();
+            const diff = birthday - now;
+            
+            if (diff > 0) {
+                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+                document.getElementById('countdown').innerText = `${days} days, ${hours} hours till the saloon opens!`;
+            } else {
+                document.getElementById('countdown').innerText = "Time to ride into the sunset!";
+            }
+        }
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
+        
+        // Photo Gallery with RDR2 captions
+        const images = [
+    { src: 'images/WhatsApp Image 2025-11-15 at 20.34.08_4d1a04e1.jpg', caption: 'Chillin\' with the gang' },  // Local file
+    { src: 'images/IMG-20251115-WA0013.jpg', caption: 'Candid' },  // Online URL
+    { src: 'images/WhatsApp Image 2025-11-15 at 18.52.31_7f604062.jpg', caption: 'Little Paarwin' },
+    // Add more as needed
+];
+
+        const gallery = document.getElementById('gallery');
+        images.forEach(item => {
+            const div = document.createElement('div');
+            const img = document.createElement('img');
+            img.src = item.src;
+            const p = document.createElement('p');
+            p.innerText = item.caption;
+            div.appendChild(img);
+            div.appendChild(p);
+            gallery.appendChild(div);
+        });
+        
+        // Wish Form (Bounties)
+        const wishForm = document.getElementById('wishForm');
+        const wishesList = document.getElementById('wishes');
+        wishForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const name = document.getElementById('name').value;
+            const message = document.getElementById('message').value;
+            const li = document.createElement('li');
+            li.innerHTML = `<strong>${name} (Outlaw):</strong> ${message}`;
+            wishesList.appendChild(li);
+            wishForm.reset();
+        });
+    </script>
+</body>
+</html>
